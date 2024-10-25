@@ -24,11 +24,13 @@ const Single_Product_Card = ({ product, postId, addToCart }) => {
   };
   return (
     <>
-      <div className="rounded-2xl overflow-hidden shadow-lg">
-        <Link to={`/Product/${postId}`}>
-          <div className="relative">
-            <img className="w-full" src={product.imageUrl} alt="Product" />
-            <div className="hover:bg-transparent rounded-2xl transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
+      <div className="rounded-xl overflow-hidden shadow-lg max-w-sm bg-gray-100">
+        
+          <div className=" ">
+           
+            <img className="w-full h-[25vh] p-5" src={product.imageUrl} alt="Product" />
+            
+           
             {product.discount && (
               <span
                 className={`discount-tag rounded-lg right-0 top-0 mr-2 mt-2 px-2 py-1 bg-red-500 text-white absolute ${
@@ -41,7 +43,7 @@ const Single_Product_Card = ({ product, postId, addToCart }) => {
               </span>
             )}
           </div>
-        </Link>
+      
         <div className="px-6">
           <a
             href="#"
@@ -51,7 +53,7 @@ const Single_Product_Card = ({ product, postId, addToCart }) => {
           </a>
           <p className="text-gray-500 text-sm">{product.description}</p>
         </div>
-        <div className="px-6 py-2 flex flex-col items-center relative">
+        <div className="px-6 py-2 flex flex-col items-start relative">
           <div>
 
           <span className="py-1 text-sm font-regular text-gray-900 mr-1 flex flex-row items-center">
@@ -100,8 +102,7 @@ const Single_Product_Card = ({ product, postId, addToCart }) => {
             className="text-white bg-orange-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full py-2.5 mb-2 dark:bg-white dark:border-2 border-orange-500 dark:text-black dark:hover:bg-orange-700 focus:outline-none dark:focus:ring-blue-800"
             type="button"
             onClick={handleAddToCart} // Call handleAddToCart function when the button is clicked
-            //onClick={addToCart}
-            //onClick={() => setIsDrawerOpen(!isDrawerOpen)} // Toggle drawer visibility
+            
           >
             Customize
           </button>

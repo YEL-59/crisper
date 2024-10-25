@@ -23,15 +23,15 @@ const QuantityCounter = ({ initialValue, onQuantityChange, availability }) => {
     <div className="flex items-center">
       <button
         onClick={handleDecrement}
-        className="px-2 py-1 border border-gray-200 mr-2 focus:outline-none"
+        className="px-2 py-1 border text-black border-gray-200 mr-2 focus:outline-none"
       >
         -
       </button>
-      <span>{quantity}</span>
+      <span className="text-black">{quantity}</span>
       <button
         onClick={handleIncrement}
         disabled={quantity === availability}
-        className="px-2 py-1 border border-gray-200 ml-2 focus:outline-none"
+        className="px-2 py-1 border border-gray-200 text-black ml-2 focus:outline-none"
       >
         +
       </button>

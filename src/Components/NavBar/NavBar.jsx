@@ -4,21 +4,23 @@ import navlogo from "/public/vite.svg";
 import { motion } from "framer-motion";
 import { FaShoppingBag } from "react-icons/fa";
 import QuantityCounter from "../QuantityCounter _Section/QuantityCounter";
-
-
+import { RiDeleteBin5Line } from "react-icons/ri";
 const NavBar = ({ cartCount, clickedProducts }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   let Links = [
-    { name: "Home", link: "/" },
-    { name: "About Us", link: "/about_us" },
-    { name: "Service", link: "/service" },
-    { name: "Contact US", link: "/contact_us" },
-    { name: "Product", link: "/product" },
+    { name: "Menu", link: "/" },
+    { name: "Rewards", link: "/about_us" },
+    { name: "Location", link: "/service" },
+    { name: "Gift Cards", link: "/contact_us" },
+    { name: "Log In", link: "/product" },
   ];
   console.log("pass to navbar", clickedProducts);
   let [open, setOpen] = useState(false);
   // Define state for total price
   const [totalPrice, setTotalPrice] = useState("");
+ 
+ 
+
 
   const handleQuantityChange = (newQuantity, productId) => {
     // Find the index of the product in the clickedProducts array
@@ -39,15 +41,21 @@ const NavBar = ({ cartCount, clickedProducts }) => {
   console.log("***updated price", totalPrice);
   console.log(clickedProducts ?? []);
   //Modify receve arry to convert object.because i want to use map
-  const clickedProductArray = clickedProducts? Object.values(clickedProducts): [];
+  const clickedProductArray = clickedProducts
+    ? Object.values(clickedProducts)
+    : [];
 
   console.log("array of clicked item cart", clickedProductArray ?? []);
 
+
+    // Function to remove a product by its ID
+    const removeProduct = (productId) => {
+      setClickedProducts(clickedProducts.filter((product) => product.id !== productId));
+    };
   return (
     <>
-      <div> 
-      
-        <nav className="container mx-auto md:flex justify-between items-center text-black py-[18.5px] p-5 lg:py-5 px-0">
+      <div>
+        <nav className="container mx-auto md:flex justify-between items-center text-orange-500 py-[18.5px] p-5 lg:py-5 px-0">
           <div className="p-2 md:p-0 lg:p-0 ">
             <motion.div
               initial={{ opacity: 0 }}
@@ -63,7 +71,6 @@ const NavBar = ({ cartCount, clickedProducts }) => {
                 alt=" main logo"
                 className="w-[7rem] h-12  drop-shadow-xl"
               />
-              
             </motion.div>
           </div>
 
@@ -89,8 +96,11 @@ const NavBar = ({ cartCount, clickedProducts }) => {
                 className="md:ml-4 md:text-[11px] truncate md:my-0 my-7 lg:text-lg relative group"
                 whileHover={{ scale: 1.1 }}
               >
-                <span className="absolute inset-x-0 bottom-0 h-.5 bg-[#089bab] border-b border-transparent transition-all duration-300 opacity-0 group-hover:opacity-100"></span>
-                <Link to={link.link} className="duration-500 font-bold">
+                <span className="absolute inset-x-0 bottom-0 h-.5 bg-orange-500 border-b border-transparent transition-all duration-300 opacity-0 group-hover:opacity-100"></span>
+                <Link
+                  to={link.link}
+                  className="duration-500 font-bold hover:text-orange-500"
+                >
                   {link.name}
                 </Link>
               </motion.li>
@@ -114,17 +124,15 @@ const NavBar = ({ cartCount, clickedProducts }) => {
               open ? "right-19" : "hidden"
             }`}
           >
-            <button className="bg-[#d6e5f1] text-[#2c6777] md:text-[11px] lg:text-[16px] px-3 py-1 rounded font-semibold lg:font-medium truncate">
-              <Link to="/booking">Booking now</Link>
+            <button className="bg-orange-500 text-white md:text-[11px] lg:text-[16px] px-3 py-1 rounded font-semibold lg:font-medium truncate">
+              <Link to="/booking">Order now</Link>
             </button>
-            <button className="bg-green-500 text-white md:text-[11px] lg:text-[16px] px-3 py-1 rounded font-semibold lg:font-medium truncate">
-              <Link to="/sign_in">Sign up</Link>
-            </button>
+            
 
             <button
               type="button"
               onClick={() => setIsDrawerOpen(!isDrawerOpen)} // Toggle drawer visibility
-              className="relative inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="relative inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-400 "
             >
               <FaShoppingBag />
               {cartCount > 0 && ( // Only show the count if cartCount is greater than 0
@@ -137,10 +145,10 @@ const NavBar = ({ cartCount, clickedProducts }) => {
             <div
               className={`${
                 isDrawerOpen ? "translate-x-0" : "translate-x-full"
-              } fixed top-0 right-0 z-40 h-screen w-[30%] p-4 overflow-y-auto transition-transform bg-white  dark:bg-gray-800`}
+              } fixed top-0 right-0 z-40 h-screen w-[30%] p-4 overflow-y-auto transition-transform bg-orange-600  dark:bg-orange-600`}
             >
               {/* Drawer content */}
-              <h5 className="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">
+              <h5 className="inline-flex items-center mb-4 text-base font-semibold text-black dark:text-black ">
                 Right drawer
               </h5>
               <button
@@ -165,32 +173,45 @@ const NavBar = ({ cartCount, clickedProducts }) => {
                 </svg>
                 <span className="sr-only">Close menu</span>
               </button>
-               {/* Conditional rendering based on cartCount */}
+              {/* Conditional rendering based on cartCount */}
               {cartCount === 0 ? (
-                <p className="mt-4 text-sm text-gray-500">
-                  Add product to the cart
+                <p className="mt-4 text-sm text-black">
+                  - Add item to the cart -
                 </p>
               ) : (
                 <div className="flex flex-col py-8 md:py-10 lg:py-8 border-t border-gray-50">
                   {clickedProductArray.map((product, index) => (
-                    <div key={index} className="flex  w-full">
+                  
+
+                    <a key={index}
+                      href="#"
+                      className="flex flex-col items-center  border border-white rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:hover:bg-transparent dark:border-white mb-2"
+                    >
                       <img
+                        className="object-cover w-full h-44 rounded md:w-48 md:rounded-none md:rounded-s-lg p-2"
                         src={product.imageUrl}
-                        alt={product.name}
-                        className="h-28 w-28 object-center object-cover md:block hidden"
+                        alt=""
                       />
-                      <img
-                        src={product.imageUrl}
-                        alt={product.name}
-                        className="md:hidden h-28 w-28 object-center object-cover"
-                      />
-                      <div className="md:pl-3 md:w-8/12 2xl:w-3/4 flex flex-col justify-center">
-                        <p className="text-xs leading-3 text-gray-800 md:pt-0 pt-4">
-                          {product.id}
+                      <div className="flex flex-col justify-between p-4 leading-normal">
+                      <div className="flex flex-row justify-between  leading-normal">
+                      <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        {product.name}
+                        </h5>
+                        <h5 
+                        onClick={() => removeProduct(product.id)}
+                        className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        <RiDeleteBin5Line />
+                        </h5>
+                      </div>
+                        <p className="mb-3 font-normal text-black">
+                        {product.description}
                         </p>
+
                         <div className="flex items-center justify-between w-full">
                           <p className="text-base font-black leading-none text-gray-800">
-                            {product.name}
+                          {product.totalPrice
+                              ? `$${product.totalPrice.toFixed(2)}`
+                               : `$${product.price}`}
                           </p>
                           <QuantityCounter
                             initialValue={product.quantity}
@@ -200,37 +221,13 @@ const NavBar = ({ cartCount, clickedProducts }) => {
                             }
                           />
                         </div>
-                        <p className="text-xs leading-3 text-gray-600 pt-2">
-                          Height: 10 inches
-                        </p>
-                        <p className="text-xs leading-3 text-gray-600 py-4">
-                          Color: Black
-                        </p>
-                        <p className="w-96 text-xs leading-3 text-gray-600">
-                          Composition: 100% calf leather
-                        </p>
-                        <div className="flex items-center justify-between pt-5">
-                          <div className="flex items-center">
-                            <p className="text-xs leading-3 underline text-gray-800 cursor-pointer">
-                              Add to favorites
-                            </p>
-                            <p className="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer">
-                              Remove
-                            </p>
-                          </div>
-                          <p className="text-base font-black leading-none text-gray-800">
-                            {/* {totalPrice ? totalPrice : product.price} */}
-                            {product.totalPrice
-                              ? `$${product.totalPrice.toFixed(2)}`
-                              : `$${product.price}`}
-                          </p>
-                        </div>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
               )}
             </div>
+            
           </div>
         </nav>
       </div>

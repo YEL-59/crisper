@@ -5,7 +5,11 @@ import { motion } from "framer-motion";
 import { FaShoppingBag } from "react-icons/fa";
 import QuantityCounter from "../QuantityCounter _Section/QuantityCounter";
 import { RiDeleteBin5Line } from "react-icons/ri";
-const NavBar = ({ cartCount, clickedProducts }) => {
+const NavBar = ({ cartCount, clickedProducts,setClickedProducts,removeProduct }) => {
+   //Modify receve arry to convert object.because i want to use map
+   const clickedProductArray = clickedProducts
+   ? Object.values(clickedProducts)
+   : [];
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   let Links = [
     { name: "Menu", link: "/" },
@@ -17,41 +21,39 @@ const NavBar = ({ cartCount, clickedProducts }) => {
   console.log("pass to navbar", clickedProducts);
   let [open, setOpen] = useState(false);
   // Define state for total price
-  const [totalPrice, setTotalPrice] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
  
  
 
 
   const handleQuantityChange = (newQuantity, productId) => {
-    // Find the index of the product in the clickedProducts array
-    const productIndex = clickedProducts.findIndex(
-      (product) => product.id === productId
-    );
-    if (productIndex !== -1) {
-      // Update the quantity for the specific product
-      const updatedProducts = [...clickedProducts];
-      updatedProducts[productIndex].quantity = newQuantity;
-      // Calculate the total price for the specific product
-      updatedProducts[productIndex].totalPrice =
-        newQuantity * updatedProducts[productIndex].price;
-
-      setTotalPrice(updatedProducts[productIndex].totalPrice);
-    }
+    const updatedProducts = clickedProducts.map(product => {
+      if (product.id === productId) {
+        const updatedProduct = { ...product, quantity: newQuantity };
+        updatedProduct.totalPrice = updatedProduct.price * updatedProduct.quantity;
+        return updatedProduct;
+      }
+      return product;
+    });
+    setClickedProducts(updatedProducts); // Update clickedProducts state
   };
+
+   // Calculate the total price of items in the cart
+   useEffect(() => {
+    const calculatedTotal = (clickedProducts ?? []).reduce(
+      (sum, product) => sum + (product.totalPrice || product.price * product.quantity),
+      0
+    );
+    setTotalPrice(calculatedTotal);
+  }, [clickedProducts]);
   console.log("***updated price", totalPrice);
   console.log(clickedProducts ?? []);
-  //Modify receve arry to convert object.because i want to use map
-  const clickedProductArray = clickedProducts
-    ? Object.values(clickedProducts)
-    : [];
+ 
 
   console.log("array of clicked item cart", clickedProductArray ?? []);
 
 
-    // Function to remove a product by its ID
-    const removeProduct = (productId) => {
-      setClickedProducts(clickedProducts.filter((product) => product.id !== productId));
-    };
+  
   return (
     <>
       <div>
@@ -226,6 +228,11 @@ const NavBar = ({ cartCount, clickedProducts }) => {
                   ))}
                 </div>
               )}
+               <div className="mt-8 pt-4 border-t border-white">
+              <p className="text-lg font-bold text-white">
+                Total Price: ${totalPrice}
+              </p>
+            </div>
             </div>
             
           </div>

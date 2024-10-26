@@ -26,7 +26,7 @@ const Single_Product_Card = ({ product, postId, addToCart }) => {
     <>
       <div className="rounded-xl overflow-hidden shadow-lg max-w-sm bg-gray-100">
         
-          <div className=" ">
+          <div className="relative ">
            
             <img className="w-full h-[25vh] p-5" src={product.imageUrl} alt="Product" />
             

@@ -31,7 +31,14 @@ const Product = () => {
     console.log("product page to navbar (cartnumber):", clickedProducts);
     //console.log(product);
   };
-
+  // Function to handle removing an item from the cart
+  const removeProduct = (productId) => {
+    const updatedProducts = clickedProducts.filter(
+      (product) => product.id !== productId
+    );
+    setClickedProducts(updatedProducts);
+    setCartCount(updatedProducts.length); // Update cart count accordingly
+  };
   // Sample products data
   const products = [
     {
@@ -139,6 +146,7 @@ const Product = () => {
             addToCart={addToCart}
             product={products}
             clickedProducts={clickedProducts}
+            removeProduct={removeProduct}
           />
         </div>
         <div className="mt-24">

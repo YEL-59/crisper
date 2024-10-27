@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 
 const QuantityCounter = ({ initialValue, onQuantityChange, availability }) => {
   const [quantity, setQuantity] = useState(initialValue);

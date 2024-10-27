@@ -5,11 +5,7 @@ import { motion } from "framer-motion";
 import { FaShoppingBag } from "react-icons/fa";
 import QuantityCounter from "../QuantityCounter _Section/QuantityCounter";
 import { RiDeleteBin5Line } from "react-icons/ri";
-const NavBar = ({ cartCount, clickedProducts,setClickedProducts,removeProduct }) => {
-   //Modify receve arry to convert object.because i want to use map
-   const clickedProductArray = clickedProducts
-   ? Object.values(clickedProducts)
-   : [];
+const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   let Links = [
     { name: "Menu", link: "/" },
@@ -22,38 +18,42 @@ const NavBar = ({ cartCount, clickedProducts,setClickedProducts,removeProduct })
   let [open, setOpen] = useState(false);
   // Define state for total price
   const [totalPrice, setTotalPrice] = useState(0);
- 
- 
+
+
+  console.log("***updated price", totalPrice);
+  console.log(clickedProducts ?? []);
+  //Modify receve arry to convert object.because i want to use map
+  const clickedProductArray = clickedProducts
+    ? Object.values(clickedProducts)
+    : [];
+
+  console.log("array of clicked item cart", clickedProductArray ?? []);
+  
+  const totalAmount = clickedProductArray.reduce(
+    (accumulator, product) => accumulator + (product.totalPrice || 0),
+    0
+  );
 
 
   const handleQuantityChange = (newQuantity, productId) => {
-    const updatedProducts = clickedProducts.map(product => {
-      if (product.id === productId) {
-        const updatedProduct = { ...product, quantity: newQuantity };
-        updatedProduct.totalPrice = updatedProduct.price * updatedProduct.quantity;
-        return updatedProduct;
-      }
-      return product;
-    });
-    setClickedProducts(updatedProducts); // Update clickedProducts state
-  };
-
-   // Calculate the total price of items in the cart
-   useEffect(() => {
-    const calculatedTotal = (clickedProducts ?? []).reduce(
-      (sum, product) => sum + (product.totalPrice || product.price * product.quantity),
-      0
+    const productIndex = clickedProducts.findIndex(
+      (product) => product.id === productId
     );
-    setTotalPrice(calculatedTotal);
-  }, [clickedProducts]);
+    if (productIndex !== -1) {
+      const updatedProducts = [...clickedProducts];
+      updatedProducts[productIndex].quantity = newQuantity;
+
+      updatedProducts[productIndex].totalPrice =
+        newQuantity * updatedProducts[productIndex].price;
+
+      setTotalPrice(updatedProducts[productIndex].totalPrice);
+    }
+  };
   console.log("***updated price", totalPrice);
   console.log(clickedProducts ?? []);
- 
 
   console.log("array of clicked item cart", clickedProductArray ?? []);
 
-
-  
   return (
     <>
       <div>
@@ -129,7 +129,6 @@ const NavBar = ({ cartCount, clickedProducts,setClickedProducts,removeProduct })
             <button className="bg-orange-500 text-white md:text-[11px] lg:text-[16px] px-3 py-1 rounded font-semibold lg:font-medium truncate">
               <Link to="/booking">Order now</Link>
             </button>
-            
 
             <button
               type="button"
@@ -183,9 +182,8 @@ const NavBar = ({ cartCount, clickedProducts,setClickedProducts,removeProduct })
               ) : (
                 <div className="flex flex-col py-8 md:py-10 lg:py-8 border-t border-gray-50">
                   {clickedProductArray.map((product, index) => (
-                  
-
-                    <a key={index}
+                    <a
+                      key={index}
                       href="#"
                       className="flex flex-col items-center  border border-white rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:hover:bg-transparent dark:border-white mb-2"
                     >
@@ -195,25 +193,26 @@ const NavBar = ({ cartCount, clickedProducts,setClickedProducts,removeProduct })
                         alt=""
                       />
                       <div className="flex flex-col justify-between p-4 leading-normal">
-                      <div className="flex flex-row justify-between  leading-normal">
-                      <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        {product.name}
-                        </h5>
-                        <h5 
-                        onClick={() => removeProduct(product.id)}
-                        className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        <RiDeleteBin5Line />
-                        </h5>
-                      </div>
+                        <div className="flex flex-row justify-between  leading-normal">
+                          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {product.name}
+                          </h5>
+                          <h5
+                            onClick={() => removeProduct(product.id)}
+                            className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                          >
+                            <RiDeleteBin5Line />
+                          </h5>
+                        </div>
                         <p className="mb-3 font-normal text-black">
-                        {product.description}
+                          {product.description}
                         </p>
 
                         <div className="flex items-center justify-between w-full">
                           <p className="text-base font-black leading-none text-gray-800">
-                          {product.totalPrice
+                            {product.totalPrice
                               ? `$${product.totalPrice.toFixed(2)}`
-                               : `$${product.price}`}
+                              : `$${product.price}`}
                           </p>
                           <QuantityCounter
                             initialValue={product.quantity}
@@ -228,13 +227,12 @@ const NavBar = ({ cartCount, clickedProducts,setClickedProducts,removeProduct })
                   ))}
                 </div>
               )}
-               <div className="mt-8 pt-4 border-t border-white">
-              <p className="text-lg font-bold text-white">
-                Total Price: ${totalPrice}
-              </p>
+              <div className="mt-8 pt-4 border-t border-white">
+                <p className="text-lg font-bold text-white">
+                  Total Price: ${totalAmount}
+                </p>
+              </div>
             </div>
-            </div>
-            
           </div>
         </nav>
       </div>

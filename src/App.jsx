@@ -1,5 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Home from './Pages/Home/Home';
+import { Routes, Route } from 'react-router-dom';
+
 import Product from './Pages/Product/Product';
 
 
@@ -9,7 +9,7 @@ function App() {
   return (
     <>
    <Routes>
-   <Route path="/" element={<Home />} />
+  
    <Route path="/" element={<Product />} />
    </Routes>
     

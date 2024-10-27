@@ -16,7 +16,7 @@ const Single_Product_Card = ({ product, addToCart }) => {
 
   // Function to handle adding item to cart
   const handleAddToCart = () => {
-    addToCart(product); // Pass the product object to the addToCart function
+    addToCart(product); 
   };
   return (
     <>
@@ -65,7 +65,7 @@ const Single_Product_Card = ({ product, addToCart }) => {
           </span>
           </div>
           <button
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full py-2.5 mb-2 dark:bg-orange-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            className="text-white bg-orange-500 hover:bg-orange-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full py-2.5 mb-2 "
             type="button"
             onClick={handleAddToCart} 
             

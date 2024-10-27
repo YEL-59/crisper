@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import navlogo from "/public/vite.svg";
+
 import { motion } from "framer-motion";
 import { FaShoppingBag } from "react-icons/fa";
 import QuantityCounter from "../QuantityCounter _Section/QuantityCounter";
 import { RiDeleteBin5Line } from "react-icons/ri";
 const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
+  let [open, setOpen] = useState(false);
+
   let Links = [
     { name: "Menu", link: "/" },
-    { name: "Rewards", link: "/about_us" },
-    { name: "Location", link: "/service" },
-    { name: "Gift Cards", link: "/contact_us" },
-    { name: "Log In", link: "/product" },
+    { name: "Rewards", link: "/" },
+    { name: "Location", link: "/" },
+    { name: "Gift Cards", link: "/c" },
+    { name: "Log In", link: "/" },
   ];
   console.log("pass to navbar", clickedProducts);
-  let [open, setOpen] = useState(false);
-  // Define state for total price
-  const [totalPrice, setTotalPrice] = useState(0);
 
-
-  console.log("***updated price", totalPrice);
+  //console.log("***updated price", totalPrice);
   console.log(clickedProducts ?? []);
   //Modify receve arry to convert object.because i want to use map
   const clickedProductArray = clickedProducts
@@ -28,12 +27,14 @@ const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
     : [];
 
   console.log("array of clicked item cart", clickedProductArray ?? []);
-  
-  const totalAmount = clickedProductArray.reduce(
-    (accumulator, product) => accumulator + (product.totalPrice || 0),
-    0
-  );
 
+  useEffect(() => {
+    const initialTotal = clickedProductArray.reduce(
+      (acc, product) => acc + (product.totalPrice || product.price),
+      0
+    );
+    setTotalPrice(initialTotal);
+  }, [clickedProductArray, cartCount]);
 
   const handleQuantityChange = (newQuantity, productId) => {
     const productIndex = clickedProducts.findIndex(
@@ -42,15 +43,17 @@ const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
     if (productIndex !== -1) {
       const updatedProducts = [...clickedProducts];
       updatedProducts[productIndex].quantity = newQuantity;
-
       updatedProducts[productIndex].totalPrice =
         newQuantity * updatedProducts[productIndex].price;
-
-      setTotalPrice(updatedProducts[productIndex].totalPrice);
+      setTotalPrice(
+        updatedProducts.reduce(
+          (acc, product) => acc + (product.totalPrice || product.price),
+          0
+        )
+      );
     }
   };
   console.log("***updated price", totalPrice);
-  console.log(clickedProducts ?? []);
 
   console.log("array of clicked item cart", clickedProductArray ?? []);
 
@@ -69,9 +72,11 @@ const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
             >
               {" "}
               <img
-                src={navlogo}
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS77pSILT1V_au7q8pAT6AvsNw2-4sVguZBJ4uIbLyYOP24jzHCVr74QQZ0uNgtokF_-DU&usqp=CAU"
+                }
                 alt=" main logo"
-                className="w-[7rem] h-12  drop-shadow-xl"
+                className="w-full h-12  drop-shadow-xl"
               />
             </motion.div>
           </div>
@@ -127,7 +132,7 @@ const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
             }`}
           >
             <button className="bg-orange-500 text-white md:text-[11px] lg:text-[16px] px-3 py-1 rounded font-semibold lg:font-medium truncate">
-              <Link to="/booking">Order now</Link>
+              Order now
             </button>
 
             <button
@@ -149,14 +154,20 @@ const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
               } fixed top-0 right-0 z-40 h-screen w-[30%] p-4 overflow-y-auto transition-transform bg-orange-600  dark:bg-orange-600`}
             >
               {/* Drawer content */}
-              <h5 className="inline-flex items-center mb-4 text-base font-semibold text-black dark:text-black ">
-                Right drawer
+              <h5 className="inline-flex items-center mb-4 text-base font-semibold text-white  ">
+                <FaShoppingBag />{" "}
+                <span className="ml-2">
+                  {cartCount > 0
+                    ? `${cartCount} ${cartCount === 1 ? "item" : "items"}`
+                    : ""}
+                </span>
               </h5>
               <button
                 type="button"
                 onClick={() => setIsDrawerOpen(false)} // Close drawer
-                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
+                className="text-white border bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white px-5"
               >
+                close
                 <svg
                   className="w-3 h-3"
                   aria-hidden="true"
@@ -176,7 +187,7 @@ const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
               </button>
               {/* Conditional rendering based on cartCount */}
               {cartCount === 0 ? (
-                <p className="mt-4 text-sm text-black">
+                <p className="mt-4 text-sm text-white">
                   - Add item to the cart -
                 </p>
               ) : (
@@ -227,11 +238,13 @@ const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
                   ))}
                 </div>
               )}
-              <div className="mt-8 pt-4 border-t border-white">
-                <p className="text-lg font-bold text-white">
-                  Total Price: ${totalAmount}
-                </p>
-              </div>
+              {cartCount > 0 && (
+                <div className="mt-8 pt-4 border-t border-white">
+                  <p className="text-lg font-bold text-white">
+                    Total Price: ${totalPrice}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </nav>

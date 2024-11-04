@@ -76,7 +76,7 @@ const NavBar = ({ cartCount, clickedProducts, removeProduct }) => {
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS77pSILT1V_au7q8pAT6AvsNw2-4sVguZBJ4uIbLyYOP24jzHCVr74QQZ0uNgtokF_-DU&usqp=CAU"
                 }
                 alt=" main logo"
-                className="w-full h-12  drop-shadow-xl"
+                className="w-12 h-12   drop-shadow-xl"
               />
             </motion.div>
           </div>
